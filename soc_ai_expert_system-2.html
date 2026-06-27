@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SOC AI Expert System - Enhanced</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0a0f1c;
+    color:white;
+}
+
+/* HEADER */
+header{
+    background:#111827;
+    padding:15px;
+    text-align:center;
+    font-weight:bold;
+}
+
+/* CONTAINER */
+.container{
+    display:flex;
+    width:90%;
+    margin:auto;
+    margin-top:20px;
+    gap:15px;
+}
+
+/* SIDEBAR */
+.sidebar{
+    width:25%;
+    background:#111827;
+    padding:15px;
+    border-radius:10px;
+}
+
+/* MAIN */
+.main{
+    width:75%;
+}
+
+/* CARD */
+.card{
+    background:#1f2937;
+    padding:20px;
+    border-radius:10px;
+}
+
+/* INPUT */
+input,select{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border:none;
+    border-radius:5px;
+}
+
+/* BUTTON */
+button{
+    width:100%;
+    padding:10px;
+    background:#22c55e;
+    border:none;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+/* RESULT */
+.result{
+    margin-top:15px;
+    padding:15px;
+    background:#111827;
+    border-radius:10px;
+}
+
+/* COLORS */
+.red{color:#ef4444;}
+.green{color:#22c55e;}
+.yellow{color:#facc15;}
+.orange{color:#fb923c;}
+
+/* RESPONSIVE */
+@media (max-width:768px){
+    .container{
+        flex-direction:column;
+        width:95%;
+    }
+    .sidebar,.main{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+SOC AI Expert System (Enhanced Version)
+</header>
+
+<div class="container">
+
+<div class="sidebar">
+<h3>Dashboard</h3>
+<p>✔ Threat Detection</p>
+<p>✔ AI Analysis</p>
+<p>✔ Network Monitoring</p>
+<p>✔ Role System</p>
+</div>
+
+<div class="main">
+<div class="card">
+
+<h3>Security Analyzer</h3>
+
+<select id="role">
+<option value="viewer">Viewer</option>
+<option value="analyst">Analyst</option>
+<option value="admin">Admin</option>
+</select>
+
+<input id="req" placeholder="Requests per second">
+<input id="cpu" placeholder="CPU Usage %">
+<input id="ram" placeholder="RAM Usage %">
+<input id="failed" placeholder="Failed Login Attempts">
+
+<button onclick="analyze()">Analyze System</button>
+
+<div class="result" id="out">Waiting for analysis...</div>
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+function analyze(){
+
+    let role = document.getElementById("role").value;
+
+    let req = Number(document.getElementById("req").value) || 0;
+    let cpu = Number(document.getElementById("cpu").value) || 0;
+    let ram = Number(document.getElementById("ram").value) || 0;
+    let failed = Number(document.getElementById("failed").value) || 0;
+
+    if(req < 0 || cpu < 0 || ram < 0 || failed < 0){
+        document.getElementById("out").innerHTML =
+        "<p class='red'>Invalid Input ❌</p>";
+        return;
+    }
+
+    let score = 0;
+
+    score += Math.min(req / 250, 40);
+    score += Math.min(cpu / 4, 20);
+    score += Math.min(ram / 4, 20);
+    score += Math.min(failed, 20);
+
+    score = Math.round(score);
+
+    let level = "";
+    let color = "";
+
+    if(score < 30){
+        level = "LOW RISK";
+        color = "green";
+    }
+    else if(score < 70){
+        level = "MEDIUM RISK";
+        color = "yellow";
+    }
+    else{
+        level = "CRITICAL THREAT";
+        color = "red";
+    }
+
+    let out = "";
+
+    if(role === "viewer"){
+        out = `<h3 class="yellow">Viewer Mode</h3>
+               <p>Limited Access</p>
+               <p>Score: ${score}</p>
+               <p class="${color}">${level}</p>`;
+    }
+    else if(role === "analyst"){
+        out = `<h3 class="orange">Analyst View</h3>
+               <p>Score: ${score}</p>
+               <p class="${color}">${level}</p>`;
+    }
+    else{
+        out = `<h3 class="red">ADMIN DASHBOARD 🚨</h3>
+               <p>Score: ${score}</p>
+               <p class="${color}">${level}</p>`;
+    }
+
+    document.getElementById("out").innerHTML = out;
+}
+
+</script>
+
+</body>
+</html>
